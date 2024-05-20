@@ -12,6 +12,9 @@ django = "^5.0.3"
 beautifulsoup4 = "^4.12.3"
 
 
+[tool.poetry.group.dev.dependencies]
+setuptools = "^69.5.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
