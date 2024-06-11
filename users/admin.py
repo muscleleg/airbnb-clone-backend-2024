@@ -7,13 +7,25 @@ from .models import User
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (
-            "Profile", {
-                "fields": ("username", "password", "name", "email", "is_host"),
-                "classes": ("wide",)
-            }
+            "Profile",
+            {
+                "fields": (
+                    "avatar",
+                    "username",
+                    "password",
+                    "name",
+                    "email",
+                    "is_host",
+                    "gender",
+                    "language",
+                    "currency",
+                ),
+                "classes": ("wide",),
+            },
         ),
         (
-            "Permissions", {
+            "Permissions",
+            {
                 "fields": (
                     "is_active",
                     "is_staff",
@@ -21,16 +33,12 @@ class CustomUserAdmin(UserAdmin):
                     "groups",
                     "user_permissions",
                 ),
-                "classes": ("collapse",)
-            }
+                "classes": ("collapse",),
+            },
         ),
         (
-            "Important dates", {
-                "fields": (
-                    "last_login", "date_joined"
-                ),
-                "classes": ("collapse",)
-            }
-        )
+            "Important dates",
+            {"fields": ("last_login", "date_joined"), "classes": ("collapse",)},
+        ),
     )
     list_display = ("username", "email", "name", "is_host")
