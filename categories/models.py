@@ -20,6 +20,7 @@ class Category(CommonModel):
 
     class Meta:
         verbose_name_plural = "Categories"
+        # 모델 Category를 Cateories로 나오게함
 
 
 # Create your models here.
