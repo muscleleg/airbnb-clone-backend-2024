@@ -9,18 +9,21 @@ class Review(CommonModel):
     user = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
+        related_name="reviews",
     )
-    rooms = models.ForeignKey(
+    room = models.ForeignKey(
         "rooms.Room",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,  # Room or Expereieces에 사용되기 때문에 null일 수 있음
+        related_name="reviews",
     )
-    experiences = models.ForeignKey(
+    experience = models.ForeignKey(
         "experiences.Experience",
         null=True,
         blank=True,
         on_delete=models.CASCADE,
+        related_name="reviews",
     )
     payload = models.TextField()
     rating = models.PositiveIntegerField()

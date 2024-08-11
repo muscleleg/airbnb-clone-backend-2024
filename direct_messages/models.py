@@ -26,6 +26,7 @@ class Message(CommonModel):
     room = models.ForeignKey(
         "direct_messages.ChattingRoom",
         on_delete=models.CASCADE,  # 채팅방이 삭제되면 메시지도 삭제되야함
+        related_name="messages",
     )
 
     def __str__(self):

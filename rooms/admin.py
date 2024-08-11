@@ -8,9 +8,9 @@ class RoomAdmin(admin.ModelAdmin):
         "name",
         "price",
         "kind",
+        "total_amenities",
         "owner",
         "created_at",
-        "updated_at",
     )
     list_filter = (
         "country",
@@ -19,6 +19,9 @@ class RoomAdmin(admin.ModelAdmin):
         "kind",
         "amenities",
     )
+
+    # def total_amenities(self, room): # 두번째에 room을 넣는 것은 관리자 패널임
+    #     return room.amenities.count()
 
 
 @admin.register(Amenity)

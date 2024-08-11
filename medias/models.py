@@ -14,6 +14,7 @@ class Photo(CommonModel):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name="photos",
     )
     # manyToOne관계, 여러개의 사진은 하나의 experience에 속할 수 있음
     experience = models.ForeignKey(
@@ -21,6 +22,7 @@ class Photo(CommonModel):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name="photos",
     )
 
     def __str__(self):
