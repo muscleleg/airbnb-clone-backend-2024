@@ -20,5 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("rooms/ ", include("rooms.urls")),  # rooms 폴더의 urls 파일
+    path("rooms/", include("rooms.urls")),
 ]
