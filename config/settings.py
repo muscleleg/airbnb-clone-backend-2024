@@ -25,7 +25,9 @@ SECRET_KEY = "django-insecure-x-7%b65j_ni&g&wd%i(ri!yt1)8!q06i+v-qq^$7=tn8diq)*t
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+THIRD_PARTY_APPS = [
+    "rest_framework",
+]
 # Application definition
 CUSTOM_APPS = [
     "common.apps.CommonConfig",
@@ -48,7 +50,7 @@ SYSTEM_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS
+INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
