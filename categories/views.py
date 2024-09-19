@@ -1,16 +1,18 @@
-from django.http import JsonResponse
-from django.core import serializers
-
-# Django serializers로 json을 나타낼 수 있으나 reponse를 커스터마이징 할 수 없어서 별로임
-# 예를들어 pk를 제외한다거나 이런게 불가능함, Django RestFramework 사용하는게 나ㅡㅇㅁ
-from .models import Category
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from categories.models import Category
+from .serializer import CategorySerializer
 
 
+@api_view()
 def categories(request):
-    all_categories = Category.objects.all()  # Create your views here.
-    return JsonResponse(
+    all_categories = Category.objects.all()
+    serializer = CategorySerializer(
+        all_categories, many=True
+    )  # many=True는 카테코리가 배열이라고 알려주는 것임
+    return Response(
         {
             "ok": True,
-            "categories": serializers.serialize("json", all_categories),
+            "categories": serializer.data,
         }
     )
