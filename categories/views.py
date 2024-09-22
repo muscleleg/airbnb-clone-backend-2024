@@ -25,7 +25,8 @@ def categories(request):
         # serializer로 validation을 해줄 수 있음
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
-            return Response({"created": True})
+            new_category = serializer.save()
+            return Response(CategorySerializer(new_category).data)
         else:
             return Response(serializer.errors)
 

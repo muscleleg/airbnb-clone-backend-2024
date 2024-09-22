@@ -6,8 +6,11 @@ class Category(CommonModel):
     """Room or Experience Category"""
 
     class CategoryKindChoices(models.TextChoices):
-        ROOMS = ("room", "Room")
-        EXPERIENCES = "experiences", "Experiences"
+        ROOMS = ("rooms", "Rooms")  # 값, 표시할 이름
+        EXPERIENCES = (
+            "experiences",
+            "Experiences",
+        )  # 기본적으로 튜플임을 표시하기 위해서 괄호를 붙여야 하지만 두개이상일때는 생략가능함, 한개일때는 써야함
 
     name = models.CharField(max_length=50)
     kind = models.CharField(
