@@ -2,6 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from categories.models import Category
 from .serializer import CategorySerializer
+from rest_framework.exceptions import NotFound
+from rest_framework.status import HTTP_204_NO_CONTENT
 
 
 @api_view(["GET", "POST"])
@@ -31,8 +33,30 @@ def categories(request):
             return Response(serializer.errors)
 
 
-@api_view()
+@api_view(["GET", "PUT", "DELETE"])
 def category(request, pk):
-    find_category = Category.objects.get(pk=pk)
-    serializer = CategorySerializer(find_category)
-    return Response(serializer.data)
+    try:
+        category = Category.objects.get(pk=pk)
+    except Category.DoesNotExist:
+        raise NotFound  # raise는 에러를 일으키는 키워드임, 자바 throw랑 같은듯
+
+    if request.method == "GET":
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+    elif request.method == "PUT":
+        # pk를 통해서 찾은 category의 데이터를 request로 받은 data로 변경
+        serializer = CategorySerializer(
+            category,
+            data=request.data,
+            partial=True,
+        )
+        # partial=True를 지정하면 request에 모델 키의 일부만 있어도 됨
+        if serializer.is_valid():
+            updated_category = serializer.save()
+            return Response(CategorySerializer(updated_category).data)
+            # serializer에 pk를 통해 찾은 category와 request를 통해 받은 data가 있을 경우에는 craete가 아니라 save가 동작함
+        else:
+            return Response(serializer.errors)
+    elif request.method == "DELETE":
+        category.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
