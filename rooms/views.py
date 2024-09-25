@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
+from rest_framework.status import HTTP_204_NO_CONTENT
 
 from .models import Room, Amenity
 from rest_framework.views import APIView
@@ -42,11 +44,31 @@ class Amenities(APIView):
 
 
 class AmenityDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Amenity.objects.get(pk=pk)
+        except Amenity.DoesNotExist:
+            raise NotFound
+
     def get(self, request, pk):
-        pass
+        amenity = self.get_object(pk)
+        serializer = AmenitySerializer(amenity)
+        return Response(serializer.data)
 
     def put(self, request, pk):
-        pass
+        amenity = self.get_object(pk)
+        serializer = AmenitySerializer(
+            amenity, request.data, partial=True
+        )  # partial=True를 꼭 줘야함, 일부만 업데이트 하겠다는것
+        if serializer.is_valid():
+            updated_amenity = (
+                serializer.save()
+            )  # 장고 모델 객체가 반환됨, 이를 json으로 변환해주기 위해 AmenitySerializer에 넣고 data를 뽑는거임
+            return Response(AmenitySerializer(updated_amenity).data)  #
+        else:
+            return Response(serializer.errors)
 
     def delete(self, request, pk):
-        pass
+        amenity = self.get_object(pk=pk)
+        amenity.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
