@@ -6,13 +6,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        # exclude, fields 중 하나만 사용해야함
-        # exclude = ("created_at",)
-        # fields = (
-        #     "name",
-        #     "kind",
-        # )
-        fields = "__all__"  # 모든필드
+        fields = (
+            "name",
+            "kind",
+        )
 
 
 # class CategorySerializer(serializers.Serializer):
