@@ -91,17 +91,22 @@ class Rooms(APIView):
             if serializer.is_valid():
                 category_pk = request.data.get("category")
                 if not category_pk:
-                    raise ParseError
+                    raise ParseError("Category is required.")
                 try:
                     category = Category.objects.get(pk=category_pk)
                     if category.kind == Category.CategoryKindChoices.EXPERIENCES:
-                        raise ParseError
-
-
+                        raise ParseError("The category kind should be rooms")
                 except Category.DoesNotExist:
-                    raise ParseError
-
+                    raise ParseError("Category not found")
                 room = serializer.save(owner=request.user, category=category)
+                amenities = request.data.get('amenities')
+                for amenity_pk in amenities:
+                    try:
+                        amenity = Amenity.objects.get(pk=amenity_pk)
+                    except Amenity.DoesNotExist:
+                        raise ParseError(f"Amenity with id {amenity_pk} not found")
+                    room.amenities.add(amenity)
+                    #자바와 다르게 파이썬은 파이썬에서는 변수가 정의된 범위(scope)는 블록이 아니라 함수나 클래스 단위로 나뉩니다.
                 serializer = RoomDetailSerializer(room)
                 return Response(serializer.data)
             else:
