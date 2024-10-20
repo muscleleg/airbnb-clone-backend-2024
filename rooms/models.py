@@ -59,7 +59,7 @@ class Room(CommonModel):
         # room.review_set.all() //related_name지우면 set_all로 써야함
         count = room.reviews.count()
         if count == 0:
-            return "No Reviews"
+            return 0
         else:
             total_rating = 0
             # room.reviews.all()을 하면 DB에서 review의 전체를 가져오기 때문에 좋지않음

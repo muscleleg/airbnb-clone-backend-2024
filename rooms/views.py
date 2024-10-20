@@ -1,10 +1,13 @@
-from unicodedata import category
-
-from django.shortcuts import render
-from django.http import HttpResponse
-from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
+from rest_framework.exceptions import (
+    NotFound,
+    NotAuthenticated,
+    ParseError,
+    PermissionDenied,
+)
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
+
+from django.db import transaction
 
 from .models import Room, Amenity
 from categories.models import Category
@@ -98,17 +101,19 @@ class Rooms(APIView):
                         raise ParseError("The category kind should be rooms")
                 except Category.DoesNotExist:
                     raise ParseError("Category not found")
-                room = serializer.save(owner=request.user, category=category)
-                amenities = request.data.get('amenities')
-                for amenity_pk in amenities:
-                    try:
-                        amenity = Amenity.objects.get(pk=amenity_pk)
-                    except Amenity.DoesNotExist:
-                        raise ParseError(f"Amenity with id {amenity_pk} not found")
-                    room.amenities.add(amenity)
-                    #자바와 다르게 파이썬은 파이썬에서는 변수가 정의된 범위(scope)는 블록이 아니라 함수나 클래스 단위로 나뉩니다.
-                serializer = RoomDetailSerializer(room)
-                return Response(serializer.data)
+                # atomic이 없다면 db에 바로 반영하지만 atomic이 있다면 변경사항을 리스트로 만듬, 에러가 발생하지 않는다면 반영
+                try:
+                    with transaction.atomic():
+                        room = serializer.save(owner=request.user, category=category)
+                        amenities = request.data.get("amenities")
+                        for amenity_pk in amenities:
+                            amenity = Amenity.objects.get(pk=amenity_pk)
+                            room.amenities.add(amenity)
+                            # 자바와 다르게 파이썬은 파이썬에서는 변수가 정의된 범위(scope)는 블록이 아니라 함수나 클래스 단위로 나뉩니다.
+                        serializer = RoomDetailSerializer(room)
+                        return Response(serializer.data)
+                except Exception:
+                    raise ParseError("Amenity not found")
             else:
                 return Response(serializer.errors)
         else:
@@ -126,3 +131,25 @@ class RoomDetail(APIView):
         room = self.get_object(pk)
         serializer = RoomDetailSerializer(room)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        room = self.get_object(pk)
+        if not request.user.is_authenticated:
+            raise NotAuthenticated
+        if room.owner != request.user:
+            raise PermissionDenied
+        serializer = RoomDetailSerializer(room, data=request.data, partial=True)
+        if serializer.is_valid():
+            updated_room = serializer.save()
+            return Response(RoomDetailSerializer(updated_room).data)
+        else:
+            return Response(serializer.errors)
+
+    def delete(self, request, pk):
+        room = self.get_object(pk)
+        if not request.user.is_authenticated:
+            raise NotAuthenticated
+        if room.owner != request.user:
+            raise PermissionDenied
+        room.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
