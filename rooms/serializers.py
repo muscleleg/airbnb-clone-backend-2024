@@ -4,6 +4,7 @@ from rest_framework.serializers import ModelSerializer
 from .models import Amenity, Room
 from users.serializers import TinyUserSerializer
 from categories.serializer import CategorySerializer
+from reviews.serializers import ReviewsSerializer
 
 
 class AmenitySerializer(ModelSerializer):
@@ -26,6 +27,7 @@ class RoomDetailSerializer(ModelSerializer):
 
     rating = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
+    reviews = ReviewsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Room
@@ -36,9 +38,8 @@ class RoomDetailSerializer(ModelSerializer):
         return room.rating()
 
     def get_is_owner(self, room):
-        request = self.context['request']
+        request = self.context["request"]
         return room.owner == request.user
-
 
     # def create(self, validated_data):
     #     return Room.objects.create(**validated_data)
@@ -50,22 +51,15 @@ class RoomListSerializer(ModelSerializer):
 
     class Meta:
         model = Room
-        fields = (
-            "pk",
-            "name",
-            "country",
-            "city",
-            "price",
-            "rating",
-            "is_owner"
-        )
+        fields = ("pk", "name", "country", "city", "price", "rating", "is_owner")
 
     def get_rating(self, room):
         return room.rating()
 
     def get_is_owner(self, room):
-        request = self.context['request']
+        request = self.context["request"]
         return room.owner == request.user
+
 
 # ModelSerializer를 상속받았기 때문에 id, created_at,updated_at이 readonly로 자동 지임정된거임
 
