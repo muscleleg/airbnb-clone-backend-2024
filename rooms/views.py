@@ -170,13 +170,17 @@ class RoomReviews(APIView):
 
     def get(self, request, pk):
         try:
-            page = request.query_params.get("page", 1)  # 오늘 타입은 string임
+            page = request.query_params.get("page", 1)  # 오늘 타입은 string임, default로 1를 주겠다는것
             page = int(page)  # string 파라미터 넣으면 에러나옴
         except ValueError:
             page = 1
+
+        page_size = 3
+        start = (page -1) * page_size
+        end = start + page_size
         room = self.get_object(pk)
         serializer = ReviewsSerializer(
-            room.reviews.all(),
+            room.reviews.all()[start:end], #0~2까지, 0포함 3은 포함안함
             many=True,
         )
         return Response(serializer.data)
