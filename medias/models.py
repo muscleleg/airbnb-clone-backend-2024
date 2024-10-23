@@ -9,7 +9,7 @@ class Photo(CommonModel):
     )
     # room이랑 experience 둘다 사용될거임
     # manyToOne관계, 여러개의 사진은 하나의 룸에 속할 수 있음
-    rooms = models.ForeignKey(
+    room = models.ForeignKey(
         "rooms.Room",
         on_delete=models.CASCADE,
         null=True,

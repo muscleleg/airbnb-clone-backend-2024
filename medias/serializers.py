@@ -10,6 +10,3 @@ class PhotoSerializer(ModelSerializer):
             "file",
             "description",
         )
-
-    def create(self, validated_data):
-        return super().create(validated_data)
