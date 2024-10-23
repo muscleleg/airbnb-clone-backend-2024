@@ -3,7 +3,7 @@ from common.models import CommonModel
 
 
 class Photo(CommonModel):
-    file = models.ImageField()
+    file = models.URLField()
     description = models.CharField(
         max_length=140,
     )
@@ -30,7 +30,7 @@ class Photo(CommonModel):
 
 
 class Video(CommonModel):
-    file = models.FileField()
+    file = models.URLField()
     # 일대일관계 비디오는 하나의 experience에 속하고 experience에는 하나의 video가 속함
     # 일대일관계는 결제정보를 저장할때도 주로 사용한다고 함
     experience = models.OneToOneField(
