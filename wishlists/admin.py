@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Wishlist
+from .models import Wishlists
 
 
-@admin.register(Wishlist)
+@admin.register(Wishlists)
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ("name", "user", "created_at", "updated_at")
 
