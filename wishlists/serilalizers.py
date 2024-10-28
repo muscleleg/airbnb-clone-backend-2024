@@ -1,8 +1,11 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Wishlists
+from .models import Wishlist
 
 
 class WishlistSerializer(ModelSerializer):
     class Meta:
-        model = Wishlists
-        fields = "__all__"
+        model = Wishlist
+        fields = (
+            "name",
+            "rooms",
+        )

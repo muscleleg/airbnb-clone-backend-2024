@@ -2,7 +2,7 @@ from django.db import models
 from common.models import CommonModel
 
 
-class Wishlists(CommonModel):
+class Wishlist(CommonModel):
     """Wishlist Model Definition"""
 
     name = models.CharField(
