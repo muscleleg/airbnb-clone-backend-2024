@@ -3,6 +3,7 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rooms.models import Room
 from .models import Wishlist
 from .serilalizers import WishlistSerializer
 
@@ -75,3 +76,30 @@ class WishlistDetail(APIView):
 # self는 인스턴스 메서드에서 인스턴스 자신을 나타내는 파라미터로, 파이썬에서는 메서드 정의 시
 # 첫 번째 파라미터로 self를 반드시 명시해야 합니다. 하지만 메서드 내부에서 다른 메서드를 호출할 때
 # self는 자동으로 전달되기 때문에 직접 파라미터에 넣을 필요는 없습니다.
+
+class WishlistToggle(APIView):
+    def get_list(self, pk, user):
+        try:
+            return Wishlist.objects.get(pk=pk, user=user)
+        except Wishlist.DoesNotExist:
+            raise NotFound
+
+    def get_room(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
+            raise NotFound
+
+    def put(self, request,pk,room_pk):
+        #room_pk는 url부분에서 매핑되는듯
+        wishlist = self.get_list(pk, request.user)
+        room = self.get_room(room_pk)
+        if wishlist.rooms.filter(pk=room.pk).exists():
+            wishlist.rooms.remove(room)
+        else:
+            wishlist.rooms.add(room)
+        return Response(status=HTTP_200_OK)
+
+
+
+
