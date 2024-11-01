@@ -1,25 +1,24 @@
 from django.conf import settings
-from django.core.serializers import serialize
+from django.db import transaction
 from rest_framework.exceptions import (
     NotFound,
     NotAuthenticated,
     ParseError,
     PermissionDenied,
 )
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
-
-from django.db import transaction
-
-from .models import Room, Amenity
-from categories.models import Category
 from rest_framework.views import APIView
 
-from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
-from reviews.serializers import ReviewsSerializer
+from categories.models import Category
 from medias.serializers import PhotoSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from reviews.serializers import ReviewsSerializer
+from .models import Room, Amenity
+from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
+from bookings.models import Booking
 
+# 1:django 2: rest framework 3: same app, 4: other app
 
 # Create your views here.
 # def see_all_hello(request):
@@ -127,7 +126,6 @@ class Rooms(APIView):
 
 
 class RoomDetail(APIView):
-
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self, pk):
@@ -163,7 +161,6 @@ class RoomDetail(APIView):
 
 
 class RoomReviews(APIView):
-
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self, pk):
@@ -194,17 +191,12 @@ class RoomReviews(APIView):
     def post(self, request, pk):
         serializer = ReviewsSerializer(data=request.data)
         if serializer.is_valid():
-            review = serializer.save(
-                user=request.user,
-                room=self.get_object(pk)
-            )
+            review = serializer.save(user=request.user, room=self.get_object(pk))
             serializer = ReviewsSerializer(review)
             return Response(serializer.data)
 
 
-
 class RoomPhotos(APIView):
-
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self, pk):
@@ -224,3 +216,18 @@ class RoomPhotos(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
+
+class RoomBookings(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # def get_object(self, pk):
+    #     try:
+    #         return Room.objects.get(pk=pk)
+    #     except:
+    #         raise NotFound
+
+    def get(self, request, pk):
+        # room = self.get_object(pk)
+        # bookings = Booking.objects.filter(room=room)
+        bookings = Booking.objects.filter(room_pk=pk)
