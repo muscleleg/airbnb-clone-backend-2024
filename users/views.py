@@ -24,6 +24,20 @@ class Me(APIView):
         if serializer.is_valid():
             user = serializer.save()
             serializer = serializers.PrivateUserSerializer(user)
+
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
+
+class Users(APIView):
+    def post(self, request):
+        serializer = serializers.PrivateUserSerializer(data=request.data)
+        if serializer.is_valid():
+            # 생성할때 ModelSerializer가 unique를 지켜줌, unique해야하는 값과 동일하게 저장하려고 시도하면 막줌아줌
+            # User가 상속받고 있는 AbstractUser를 보면 username은 unique가 true임
+            user = serializer.save()
+            serializer = serializers.PrivateUserSerializer(user)
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
