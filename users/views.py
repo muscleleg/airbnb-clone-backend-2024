@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.exceptions import ParseError
 from rest_framework.permissions import IsAuthenticated
 from . import serializers
 
@@ -32,12 +33,28 @@ class Me(APIView):
 
 class Users(APIView):
     def post(self, request):
+        password = request.data.get('password')
+        if not password:
+            raise ParseError
         serializer = serializers.PrivateUserSerializer(data=request.data)
         if serializer.is_valid():
             # 생성할때 ModelSerializer가 unique를 지켜줌, unique해야하는 값과 동일하게 저장하려고 시도하면 막줌아줌
             # User가 상속받고 있는 AbstractUser를 보면 username은 unique가 true임
             user = serializer.save()
+            #user객체안에 set_password가 있고 이놈이 password를 해쉬화해줌 따라서 객체를 쓰기 위해 저장을 해야함(객체가 있어야 내부 메소드를 쓰던가 하니까)
+            #이걸로 유저를 만들어도 관리자패널에는 접근못함, 관리자 패널 접근 계정은 일반 유저가 아님, 관리자 패널에서 스태프권한과, 최상위 사용자 권한을 모두 주면 관리자 패널 사용가능
+            user.set_password(password)
+            user.save()
             serializer = serializers.PrivateUserSerializer(user)
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+# {
+# "username":"password-test",
+# "email": "password@gmail.com",
+# "name": "니콜라스",
+# "gender": "male",
+# "language": "kr",
+# "currency": "won",
+# "password":"12345"
+# }
