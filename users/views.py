@@ -1,9 +1,12 @@
+from xml.dom import NotFoundErr
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import IsAuthenticated
 from . import serializers
+from .models import User
 
 
 class Me(APIView):
@@ -58,3 +61,23 @@ class Users(APIView):
 # "currency": "won",
 # "password":"12345"
 # }
+
+#code-challenge: 특정 유저의 모들 리뷰나오게 하기
+class PublicUser(APIView):
+
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFoundErr
+        serializer = serializers.PrivateUserSerializer(user)
+        return Response(serializer.data)
+
+class ChangePassword(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        old_password =request.data.get('old_password')
+        new_password =request.data.get('new_password')
+
+
