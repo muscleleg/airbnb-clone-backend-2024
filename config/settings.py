@@ -27,6 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",  # 이거 추가하면 DB생김
     "strawberry.django",
 ]
 # Application definition
@@ -141,10 +142,11 @@ MEDIA_URL = "user-uploads/"  # 파일 접근을 위한 url
 
 PAGE_SIZE = 3
 
-REST_FRAMEWORK= {
-    'DEFAULT_AUTHENTICATION_CLASSES' :[
-        'rest_framework.authentication.SessionAuthentication',
-        'config.permissions.TrustMeBroAuthentication'
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "config.permissions.TrustMeBroAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ]
     # authentication class는 무엇이든 될 수 있음. 마지막에 User만 반환하면됨
 }
