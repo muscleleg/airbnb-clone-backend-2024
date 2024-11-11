@@ -1,0 +1,19 @@
+### token-login
+POST http://127.0.0.1:8000/api/v1/users/token-login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "1234"
+}
+
+### 테스트
+GET http://127.0.0.1:8000/api/v1/users/me
+Content-Type: application/json
+Authorization: Token 9ef7fb889f81728bdac683e05a988ac77353448c
+
+
+
+
+
+
