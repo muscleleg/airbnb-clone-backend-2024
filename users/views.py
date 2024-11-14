@@ -46,7 +46,7 @@ class Users(APIView):
             # User가 상속받고 있는 AbstractUser를 보면 username은 unique가 true임
             user = serializer.save()
             # user객체안에 set_password가 있고 이놈이 password를 해쉬화해줌 따라서 객체를 쓰기 위해 저장을 해야함(객체가 있어야 내부 메소드를 쓰던가 하니까)
-            # 이걸로 유저를 만들어도 관리자패널에는 접근못함, 관리자 패널 접근 계정은 일반 유저가 아님, 관리자 패널에서 스태프권한과, 최상위 사용자 권한을 모두 주면 관리자 패널 사용가능
+            # 이걸로 유저를 만들어도 관리자패널에는 접근못함, 관리자 패널 접근 계정은 일반 유저s가 아님, 관리자 패널에서 스태프권한과, 최상위 사용자 권한을 모두 주면 관리자 패널 사용가능
             user.set_password(password)
             user.save()
             serializer = serializers.PrivateUserSerializer(user)
