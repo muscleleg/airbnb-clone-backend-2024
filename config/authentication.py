@@ -1,3 +1,5 @@
+import jwt
+from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -21,3 +23,28 @@ class TrustMeBroAuthentication(BaseAuthentication):
         # return 값으로 user가 나올 때까지 다른 authentication으로 차근차근 넘어감, 이전에는 SessionAuthentication에서 넘어온거임.
         except User.DoesNotExist:
             raise AuthenticationFailed(f"No user {username}")
+
+
+class JWTAuthentication(BaseAuthentication):
+
+    def authenticate(self, request):
+        test = dir(request)
+        token = request.headers.get("Jwt")
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        print(decoded)
+        return None
+
+
+# `jwt.decode` 함수에서 `algorithms` 파라미터에 두 개의 알고리즘이 들어가면, `jwt.decode`는 두 알고리즘 중 하나로 토큰을 검증하려 시도합니다. 주어진 알고리즘 목록에서 첫 번째 알고리즘이 실패하면 두 번째 알고리즘을 사용하여 검증을 시도합니다.
+#
+# 예를 들어, 아래와 같은 코드에서는 `HS256` 알고리즘을 먼저 시도하고, 실패할 경우 `"알고리즘"`(자신이 지정한 다른 알고리즘)을 사용하여 검증을 시도합니다:
+#
+# ```python
+# decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256", "알고리즘"])
+# ```
+#
+# 이 경우:
+# - `HS256`: 일반적으로 사용하는 HMAC 알고리즘입니다.
+# - `"알고리즘"`: 사용자가 지정한 다른 알고리즘을 의미합니다. 여기서 `"알고리즘"`은 예시일 뿐이며 실제 코드에서는 유효한 알고리즘 이름을 사용해야 합니다. (예: `"RS256"`, `"ES256"` 등)
+#
+# 이 방식은 유연성을 제공하며, 여러 알고리즘을 사용할 수 있는 경우 유용합니다.

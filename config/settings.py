@@ -145,7 +145,8 @@ PAGE_SIZE = 3
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "config.permissions.TrustMeBroAuthentication",
+        "config.authentication.TrustMeBroAuthentication",
+        "config.authentication.JWTAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ]
     # authentication class는 무엇이든 될 수 있음. 마지막에 User만 반환하면됨
