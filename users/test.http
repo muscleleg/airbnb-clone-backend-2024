@@ -10,7 +10,7 @@ Content-Type: application/json
 ### 테스트
 GET http://127.0.0.1:8000/api/v1/users/me
 Content-Type: application/json
-Jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwayI6Mn0.QMJ2GgbPnIFvCWQzQ7C5ITKoV5u_6S-tO8Adbizrahs
+JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwayI6Mn0.QMJ2GgbPnIFvCWQzQ7C5ITKoV5u_6S-tO8Adbizrahs
 
 ### jwt-login
 POST http://127.0.0.1:8000/api/v1/users/jwt-login

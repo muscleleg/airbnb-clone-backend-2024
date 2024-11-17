@@ -30,9 +30,17 @@ class JWTAuthentication(BaseAuthentication):
     def authenticate(self, request):
         test = dir(request)
         token = request.headers.get("Jwt")
+        if not token:
+            return None
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        print(decoded)
-        return None
+        pk = decoded.get("pk")
+        if not pk:
+            raise AuthenticationFailed("Invalid Token")
+        try:
+            user = User.objects.get(pk=pk)
+            return (user, None)
+        except User.DoesNotExist:
+            raise AuthenticationFailed("User Not Found")
 
 
 # `jwt.decode` 함수에서 `algorithms` 파라미터에 두 개의 알고리즘이 들어가면, `jwt.decode`는 두 알고리즘 중 하나로 토큰을 검증하려 시도합니다. 주어진 알고리즘 목록에서 첫 번째 알고리즘이 실패하면 두 번째 알고리즘을 사용하여 검증을 시도합니다.
