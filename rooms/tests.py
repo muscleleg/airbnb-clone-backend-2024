@@ -4,7 +4,8 @@ from . import models
 
 class TestAemenities(APITestCase):
     NAME = "Amenity Test"
-    DESC = "Aemnity DESC"
+    DESC = "Amenity DESC"
+    URL = "/api/v1/rooms/amenities/"
 
     def setUp(self) -> None:
         # 테스트를 싱핼하기 전에 수행하는 코드
@@ -15,10 +16,7 @@ class TestAemenities(APITestCase):
 
     # test_로 시작하지 않으면 장고는 test코드를 실행하지 않음
     def test_all_amenities(self):
-
-        response = self.client.get(
-            "/api/v1/rooms/amenities/"
-        )  # 자기 자신한테 request 쏨
+        response = self.client.get(self.URL)  # 자기 자신한테 request 쏨
         data = (
             response.json()
         )  # 출력해도 빈배열만 나옴, 왜냐하면 장고는 test를 위한 db를 따로 사용함, test에만 사용하고 이후에 없애는 데이터베이스임
@@ -46,4 +44,37 @@ class TestAemenities(APITestCase):
             data[0]["description"],
             self.DESC,
         )
-        # self.assertIsInstance(data, str)
+
+    def test_create_amenity(self):
+
+        new_amenity_name = "New Amenity"
+        new_amenity_description = "New Amenity desc."
+        response = self.client.post(
+            self.URL,
+            data={
+                "name": new_amenity_name,
+                "description": new_amenity_description,
+            },
+        )
+
+        data = response.json()
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Not 200 status code",
+        )
+        self.assertEqual(
+            data["name"],
+            new_amenity_name,
+        )
+        self.assertEqual(
+            data["description"],
+            new_amenity_description,
+        )
+
+        response = self.client.post(self.URL)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("name", data)  # key 값 있는지 확인하는것
+
+        print(response.json())
