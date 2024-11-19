@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from . import models
+from .serializers import AmenitySerializer
 
 
 class TestAemenities(APITestCase):
@@ -78,3 +79,49 @@ class TestAemenities(APITestCase):
         self.assertIn("name", data)  # key 값 있는지 확인하는것
 
         print(response.json())
+
+
+class TestAmenity(APITestCase):
+    NAME = "Test Amenity"
+    DESC = "Test Dsc"
+
+    def setUp(self):
+        models.Amenity.objects.create(
+            name=self.NAME,
+            description=self.DESC,
+        )
+
+    def test_amenity_not_found(self):
+        response = self.client.get("/api/v1/rooms/amenities/2")
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_amenity(self):
+
+        response = self.client.get("/api/v1/rooms/amenities/1")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["name"], self.NAME)
+        self.assertEqual(data["description"], self.DESC)
+
+    def test_put_amenity(self):
+        # given
+        amenity = models.Amenity.objects.get(name=self.NAME, description=self.DESC)
+        find_data = AmenitySerializer(amenity).data
+        updated_name = "Updated Name"
+        find_data["name"] = updated_name
+
+        # when
+        response = self.client.put("/api/v1/rooms/amenities/1", find_data)
+
+        # then
+        updated_data = response.json()
+        self.assertEqual(updated_data["name"], updated_name)
+
+    def test_delete_amenity(self):
+        response = self.client.delete("/api/v1/rooms/amenities/1")
+
+        self.assertEqual(response.status_code, 204)
