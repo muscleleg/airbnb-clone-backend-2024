@@ -1,7 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import {ChakraProvider} from "@chakra-ui/react";
-import { defaultSystem } from "@chakra-ui/react"
 import {RouterProvider} from "react-router";
 import router from "./router";
 
@@ -10,7 +9,7 @@ const root = createRoot(
 );
 root.render(
     <React.StrictMode>
-        <ChakraProvider value={defaultSystem}>
+        <ChakraProvider>
             <RouterProvider router={router}/>
         </ChakraProvider>
     </React.StrictMode>

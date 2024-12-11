@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@chakra-ui/react": "^3.2.3",
+    "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.14.0",
     "@types/react-dom": "^19.0.1",
     "cra-template-typescript": "1.2.0",

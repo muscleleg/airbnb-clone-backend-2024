@@ -19,7 +19,6 @@
     // 라이브러리 타입 검사 건너뛰기
     "forceConsistentCasingInFileNames": true,
     // 대소문자 구분 강제
-    "jsx": "react",
     "jsx": "react-jsx"
   },
   "include": [
