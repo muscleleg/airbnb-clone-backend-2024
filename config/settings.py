@@ -38,6 +38,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",  # 이거 추가하면 DB생김
     "strawberry.django",
+    "corsheaders",
 ]
 # Application definition
 CUSTOM_APPS = [
@@ -71,6 +72,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -160,3 +162,5 @@ REST_FRAMEWORK = {
     ]
     # authentication class는 무엇이든 될 수 있음. 마지막에 User만 반환하면됨
 }
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]

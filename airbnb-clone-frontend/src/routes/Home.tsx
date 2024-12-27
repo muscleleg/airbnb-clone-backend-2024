@@ -1,8 +1,22 @@
-import {Box, Button, Grid, Heading, HStack, Image, Skeleton, SkeletonText, Text, VStack} from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Grid,
+    Heading,
+    HStack,
+    Image,
+    Skeleton,
+    SkeletonText,
+    Text,
+    useEditable,
+    VStack
+} from "@chakra-ui/react";
 import {FaHeart, FaRegHeart, FaStar} from "react-icons/fa";
 import Room from "../components/Room";
+import {useEffect} from "react";
 
 export default function Home() {
+    useEffect(()=>{fetch(" http://127.0.0.1:8000/api/v1/rooms/")},[])
     return <Grid mt={10}
                  px={{
                      base: 10, lg: 40,
