@@ -3,7 +3,7 @@ import {
     Button,
     HStack,
     IconButton,
-    LightMode,
+    LightMode, Stack,
     useColorMode,
     useColorModeValue,
     useDisclosure
@@ -20,7 +20,14 @@ export default function Header() {
     const logColor = useColorModeValue("red.500", "red.200");
     const Icon = useColorModeValue(FaMoon, FaSun)
     return (
-        <HStack justifyContent={"space-between"} py={5} px={10} borderBottomWidth={1}>
+        <Stack justifyContent={"space-between"}
+               alignItems="center"
+               py={5}
+               px={40}
+               borderBottomWidth={1}
+               direction={{sm: "column", md: 'row'}}
+               spacing={{sm:3,md:0}}
+        >
             <Box color={logColor}>
                 {/*FaAirbnb는 차크라 ui 요소가 아니라서 red.500으로 color를 줄 수 없음, 찐 색상코드 넣어야함, 그래서 box로 wrapping하는 것임*/}
                 <FaAirbnb size={48}/>
@@ -37,6 +44,6 @@ export default function Header() {
             </HStack>
             <LoginModal isOpen={isLoginOpen} onClose={onLoginClose}/>
             <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose}/>
-        </HStack>
+        </Stack>
     );
 }
