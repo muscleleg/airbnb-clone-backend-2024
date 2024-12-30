@@ -1,8 +1,12 @@
-const BASE_URL = "http://127.0.0.1:8000"
-export async function getRooms() {
-    const response = await fetch(`${BASE_URL}/api/v1/rooms/`);
+import axios from "axios";
+import {QueryFunctionContext, QueryKey} from "@tanstack/react-query";
 
-    const json = await response.json();
+const instance = axios.create({
+    baseURL: "http://127.0.0.1:8000/api/v1/"
+})
+export const getRooms = () => instance.get(`rooms/`).then(response => response.data);
 
-    return json;
-}
+export const getRoom = (queryKey: QueryFunctionContext) => {
+    const pk = queryKey.queryKey[1];
+    return instance.get(`rooms/${pk}`).then(response => response.data)
+};

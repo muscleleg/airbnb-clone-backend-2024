@@ -6,7 +6,7 @@ import RoomSkeleton from "../components/RoomSkeleton";
 import {useQuery} from "@tanstack/react-query";
 import {getRooms} from "../api";
 
-interface IPhoto{
+interface IPhoto {
     pk: number;
     file: string;
     description: string;
@@ -24,7 +24,7 @@ interface IRoom {
 }
 
 export default function Home() {
-    const {isLoading,data} = useQuery<IRoom[]>({
+    const {isLoading, data} = useQuery<IRoom[]>({
         queryKey: ["rooms"],
         queryFn: getRooms, // v5에서는 queryFn으로 명시
     });
@@ -49,9 +49,10 @@ export default function Home() {
                 <RoomSkeleton/>
                 <RoomSkeleton/><RoomSkeleton/><RoomSkeleton/></>
         ) : null}
-
         {data?.map(room =>
             <Room
+                key={room.pk}
+                pk={room.pk}
                 imageUrl={room.photos[0]?.file}
                 name={room.name}
                 rating={room.rating}
