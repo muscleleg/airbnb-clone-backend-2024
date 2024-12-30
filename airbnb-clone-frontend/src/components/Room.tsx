@@ -1,4 +1,4 @@
-import {Box, Button, Center, Grid, Heading, HStack, Image, Text, useColorModeValue, VStack} from "@chakra-ui/react";
+import {Box, Button, Grid, Heading, HStack, Image, Text, useColorModeValue, VStack} from "@chakra-ui/react";
 import {FaRegHeart, FaStar} from "react-icons/fa";
 
 interface IRoomProps {
@@ -16,18 +16,12 @@ export default function Room({imageUrl, name, rating, city, country, price}: IRo
     return (
         <VStack alignItems={"flex-start"}>
             <Box position="relative" overflow="hidden" rounded="3xl" mb={2}>
-                {imageUrl ? (
                     <Image
-                        w="300px"
+                        w="230px"
                         h="280px"
                         objectFit="cover"
                         src={imageUrl}
                     />
-                ) : (
-                    <Center w="300px" h="280px" bg="gray.200" borderRadius="md">
-                        <Text color="gray.500">No Image</Text>
-                    </Center>
-                )}
                 <Button variant={"unstyled"} position="absolute" top={0} right={0} color="white">
                     <FaRegHeart size="25px"/>
                 </Button>
